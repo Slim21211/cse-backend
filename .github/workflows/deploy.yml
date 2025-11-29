@@ -14,11 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Decode SSH Private Key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > deploy_key
+        shell: bash
+        
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+          ssh-private-key: deploy_key
+          
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
